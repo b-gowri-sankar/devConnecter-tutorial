@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server",
     "server": "supervisor server",
-    "client":"npm start --prefix client",
-    "dev":"concurrently \"npm run server\" \"npm run client\""
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "B-Gowri-Sankar",
   "license": "MIT",
@@ -20,6 +20,7 @@
     "gravatar": "^1.8.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.0",
+    "prop-types": "^15.7.2",
     "request": "^2.88.2"
   },
   "devDependencies": {
