@@ -5,11 +5,17 @@ import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import Dashboard from './components/dashboard/Dashboard';
 import store from './store';
 import Alert from './components/layout/Alert';
 import { Provider } from 'react-redux';
 import setAuthToken from './utils/setAuthToken';
 import { loadUser } from './actions/auth';
+import PrivateRoute from './components/routing/PrivateRoute';
+import CreateProfile from './components/profile-form/CreateProfile';
+import EditProfile from './components/profile-form/EditProfile';
+import AddExperience from './components/profile-form/AddExperience';
+import AddEducation from './components/profile-form/AddEducation'
 if (localStorage.token) {
   setAuthToken(localStorage.token)
 }
@@ -30,7 +36,12 @@ const App = () => {
             <Alert />
           <Switch>
             <Route path='/register' exact component={Register} />
-            <Route path='/login' exact component={Login} />
+              <Route path='/login' exact component={Login} />
+              <PrivateRoute path='/dashboard' exact component={Dashboard} />
+              <PrivateRoute path='/create-profile' exact component={CreateProfile} />
+              <PrivateRoute path='/edit-profile' exact component={EditProfile} />
+              <PrivateRoute path='/add-experience' exact component={AddExperience} />
+              <PrivateRoute path='/add-education' exact component={AddEducation} />
           </Switch>
         </section>
         </Fragment>

@@ -6,7 +6,7 @@ const router = express.Router();
 const Profile = require('../../models/Profile')
 const User = require('../../models/Users')
 const config = require('config')
-
+const Post = require('../../models/Posts')
 
 //@route    GET api/profiles/me
 // @desc    GET current users profile
@@ -26,7 +26,7 @@ router.get('/me',auth, async (req, res) => {
     }
 })
 
-//@route    POST api/profiles/profile
+//@route    POST api/profiles
 // @desc    Create or Update user profile
 //@access   private
 
@@ -45,7 +45,7 @@ router.post('/',
     async (req, res) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
-            res.status(400).json({error: errors.array()})
+           return res.status(400).json({error: errors.array()})
         }
         const {
             company,
@@ -73,7 +73,6 @@ router.post('/',
         if (bio) profileFields.bio = bio;
         if (status) profileFields.status = status;
         if (githubusername) profileFields.githubusername = githubusername;
-
         if (skills) {
             profileFields.skills = skills.split(',').map(skill => skill.trim())
         }
@@ -152,6 +151,7 @@ router.get('/user/:user_id', async (req, res) => {
 router.delete('/',auth, async (req, res) => {
     try {
         //@todo - remove users posts
+        await Post.deleteMany({user: req.user.id})
         //remove Profile
         await Profile.findOneAndRemove({ user: req.user.id })
         await User.findOneAndRemove({ _id: req.user.id })
@@ -229,10 +229,8 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         const profile = await Profile.findOne({ user: req.user.id });
 
         //get remove index of experience
-        console.log(req.params.exp_id)
         const removeIndex = profile.experience.map(item => item.id).indexOf(req.params.exp_id)
 
-        console.log("the remove index",removeIndex)
         if (removeIndex < 0)
             return res.status(400).send('The Experience is Not Found')
         profile.experience.splice(removeIndex, 1);
@@ -247,7 +245,7 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
 })
 
 //@route    PUT api/profiles
-// @desc    ADd Profile ecperiesnce
+// @desc    ADd Profile education
 //@access   Private
 
 
@@ -285,10 +283,11 @@ router.put('/education',
             current,
             description
         } = req.body;
-
         const profile = await Profile.findOne({ user: req.user.id })
         profile.education.unshift({ school, degree, fieldofstudy, from, to, current, description })
         
+        
+
         await profile.save()
 
         return res.json(profile)
