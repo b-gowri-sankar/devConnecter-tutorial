@@ -55,10 +55,11 @@ export const getProfileById = (userId) => async dispatch => {
         });
     }
     catch (err) {
-        dispatch({
-            type: PROFILE_ERROR,
-            payload:{ msg: err.response.statusText, status: err.response.status}
-        })
+        console.log("error", err)
+        // dispatch({
+        //     type: PROFILE_ERROR,
+        //     payload:{ msg: err.response.statusText, status: err.response.status}
+        // })
     }
 }
 //GET github repos
