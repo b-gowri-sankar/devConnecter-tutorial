@@ -158,7 +158,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
 
         await post.save()
 
-        res.send('the post is unliked')
+        res.send(post.likes)
 
     } catch (err) {
         console.error(err.message)
