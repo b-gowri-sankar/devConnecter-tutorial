@@ -1,4 +1,4 @@
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST } from "./types";
+import { GET_POSTS,GET_POST, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST } from "./types";
 import axios from 'axios'
 import { setAlert } from './alert'
 
@@ -128,6 +128,33 @@ export const addPost = (text) => async dispatch => {
             payload: res.data
         })
         dispatch(setAlert("Post is Created", 'success'))
+    }
+    catch (err) {
+        if (err.response) {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.response.statusText, status: err.response.status}
+            })
+        }
+        else {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.message, status:'Just Check the action code for error'}
+            })
+        }
+    }
+}
+
+export const getPost = id => async dispatch => {
+    try {
+
+        const res = await axios.get(`/api/posts/${id}`);
+
+        dispatch({
+            type: GET_POST,
+            payload: res.data
+        })
+        
     }
     catch (err) {
         if (err.response) {
