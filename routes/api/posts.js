@@ -21,7 +21,7 @@ router.post('/', [auth, [
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array()})
         }
-
+        
         const user = await User.findById(req.user.id).select('-password')
 
         const newPost = {
