@@ -1,4 +1,13 @@
-import { GET_POSTS,GET_POST, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST } from "./types";
+import {
+    GET_POSTS,
+    GET_POST,
+    POST_ERROR,
+    UPDATE_LIKES,
+    DELETE_POST,
+    ADD_POST,
+    ADD_COMMENT,
+    REMOVE_COMMENT
+} from "./types";
 import axios from 'axios'
 import { setAlert } from './alert'
 
@@ -157,6 +166,65 @@ export const getPost = id => async dispatch => {
         
     }
     catch (err) {
+        if (err.response) {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.response.statusText, status: err.response.status}
+            })
+        }
+        else {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.message, status:'Just Check the action code for error'}
+            })
+        }
+    }
+}
+
+//ADD COMMENT
+
+export const addComment = (formData, postId) => async dispatch => {
+    try {
+        const config = {
+            header: {
+                'content-type': 'application/json'
+            }
+        }
+        const res = await axios.put(`/api/posts/comment/${postId}`,formData, config)
+
+        dispatch({
+            type: ADD_COMMENT,
+            payload: res.data
+        })
+    }
+    catch (err){
+        if (err.response) {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.response.statusText, status: err.response.status}
+            })
+        }
+        else {
+            dispatch({
+                type: POST_ERROR,
+                payload:{msg:err.message, status:'Just Check the action code for error'}
+            })
+        }
+    }
+}
+
+//DELETE COMMENT
+
+export const deleteComment = ( postId, commentId ) => async dispatch => {
+    try {
+
+        const res = await axios.delete(`/api/posts/comment/${postId}/${commentId}`)
+        dispatch({
+            type: REMOVE_COMMENT,
+            payload: res.data
+        })
+    }
+    catch(err) {
         if (err.response) {
             dispatch({
                 type: POST_ERROR,
